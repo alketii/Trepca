@@ -19,20 +19,19 @@ func _ready():
 	
 func generate_parts(direction,pos):
 	if direction == global.RIGHT:
-		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x = "+str(pos.x/BLOCK_SIZE+7)+" AND pos_y > "+str(pos.y/BLOCK_SIZE-3)+" and pos_y < "+str(pos.y/BLOCK_SIZE+3)):
+		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x = "+str(pos.x/BLOCK_SIZE+7)+" AND pos_y > "+str(pos.y/BLOCK_SIZE-5)+" and pos_y < "+str(pos.y/BLOCK_SIZE+5)):
 			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
 	elif direction == global.LEFT:
-		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x = "+str(pos.x/BLOCK_SIZE-7)+" AND pos_y > "+str(pos.y/BLOCK_SIZE-3)+" and pos_y < "+str(pos.y/BLOCK_SIZE+3)):
+		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x = "+str(pos.x/BLOCK_SIZE-7)+" AND pos_y > "+str(pos.y/BLOCK_SIZE-5)+" and pos_y < "+str(pos.y/BLOCK_SIZE+5)):
 			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
 	elif direction == global.DOWN:
-		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(pos.x/BLOCK_SIZE-7)+" AND pos_x < "+str(pos.x/BLOCK_SIZE+7)+" and pos_y = "+str(pos.y/BLOCK_SIZE+3)):
+		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(pos.x/BLOCK_SIZE-7)+" AND pos_x < "+str(pos.x/BLOCK_SIZE+7)+" and pos_y = "+str(pos.y/BLOCK_SIZE+5)):
 			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
 
 func generate_world():
-	var player = get_node("player")
 	var pos = db.fetch_array("SELECT * FROM player LIMIT 1;")
 	pos = pos[0]
-	for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(int(pos["pos_x"])-6)+" AND pos_x < "+str(int(pos["pos_x"])+6)+" AND pos_y > "+str(int(pos["pos_y"])-3)+" and pos_y < "+str(int(pos["pos_y"])+3)):
+	for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(int(pos["pos_x"])-7)+" AND pos_x < "+str(int(pos["pos_x"])+7)+" AND pos_y > "+str(int(pos["pos_y"])-6)+" and pos_y < "+str(int(pos["pos_y"])+6)):
 		add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
 	add_player()
 			

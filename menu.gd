@@ -40,6 +40,6 @@ func _on_generate_pressed():
 					type = global.DIRT
 			db.query(str("INSERT INTO tiles (pos_x, pos_y, tile_type) VALUES('"+str(x)+"','"+str(y)+"','"+str(type)+"');"))
 	db.query(str("CREATE TABLE IF NOT EXISTS player (pos_x INTEGER, pos_y INTEGER);"))
-	db.query(str("INSERT INTO player (pos_x, pos_y) VALUES('0','0');"))
+	db.query(str("INSERT INTO player (pos_x, pos_y) VALUES('0','2');"))
 	get_node("generate").set_text("DONE!")
 	get_node("resume").set_disabled(false)

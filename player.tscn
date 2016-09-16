@@ -1,12 +1,13 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=6 format=1]
 
 [ext_resource path="res://player.gd" type="Script" id=1]
-[ext_resource path="res://Tiles/cactus_inside.png" type="Texture" id=2]
+[ext_resource path="res://player/player.png" type="Texture" id=2]
 [ext_resource path="res://tools/pick.png" type="Texture" id=3]
+[ext_resource path="res://tools/ladder.png" type="Texture" id=4]
 
 [sub_resource type="SpriteFrames" id=1]
 
-animations = [ { "frames":[ ExtResource( 3 ) ], "loop":true, "name":"default", "speed":5.0 } ]
+animations = [ { "frames":[ ExtResource( 3 ), ExtResource( 4 ) ], "loop":true, "name":"default", "speed":5.0 } ]
 
 [node name="player" type="KinematicBody2D"]
 
@@ -25,6 +26,14 @@ texture = ExtResource( 2 )
 enabled = true
 exclude_parent = true
 cast_to = Vector2( 0, 128 )
+layer_mask = 1
+type_mask = 15
+
+[node name="check_up" type="RayCast2D" parent="."]
+
+enabled = true
+exclude_parent = true
+cast_to = Vector2( 0, -128 )
 layer_mask = 1
 type_mask = 15
 
@@ -51,7 +60,7 @@ rotating = false
 current = true
 zoom = Vector2( 1, 1 )
 limit/left = -10000000
-limit/top = -10000000
+limit/top = 0
 limit/right = 10000000
 limit/bottom = 10000000
 limit/smoothed = false

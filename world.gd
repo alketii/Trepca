@@ -2,6 +2,7 @@ extends Node2D
 
 var block = preload("res://block.tscn")
 var player_p = preload("res://player.tscn")
+var ladder_p = preload("res://items/ladder/ladder.tscn")
 
 onready var db = SQLite.new()
 
@@ -21,18 +22,26 @@ func generate_parts(direction,pos):
 	if direction == global.RIGHT:
 		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x = "+str(pos.x/BLOCK_SIZE+7)+" AND pos_y > "+str(pos.y/BLOCK_SIZE-5)+" and pos_y < "+str(pos.y/BLOCK_SIZE+5)):
 			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
+			add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
 	elif direction == global.LEFT:
 		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x = "+str(pos.x/BLOCK_SIZE-7)+" AND pos_y > "+str(pos.y/BLOCK_SIZE-5)+" and pos_y < "+str(pos.y/BLOCK_SIZE+5)):
 			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
+			add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
+	elif direction == global.UP:
+		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(pos.x/BLOCK_SIZE-7)+" AND pos_x < "+str(pos.x/BLOCK_SIZE+7)+" and pos_y = "+str(pos.y/BLOCK_SIZE-5)):
+			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
+			add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
 	elif direction == global.DOWN:
 		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(pos.x/BLOCK_SIZE-7)+" AND pos_x < "+str(pos.x/BLOCK_SIZE+7)+" and pos_y = "+str(pos.y/BLOCK_SIZE+5)):
 			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
+			add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
 
 func generate_world():
 	var pos = db.fetch_array("SELECT * FROM player LIMIT 1;")
 	pos = pos[0]
 	for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(int(pos["pos_x"])-7)+" AND pos_x < "+str(int(pos["pos_x"])+7)+" AND pos_y > "+str(int(pos["pos_y"])-6)+" and pos_y < "+str(int(pos["pos_y"])+6)):
 		add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
+		add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
 	add_player()
 			
 func add_block(x,y,type):
@@ -41,6 +50,13 @@ func add_block(x,y,type):
 		block_new.set_pos(Vector2(x*BLOCK_SIZE,y*BLOCK_SIZE))
 		block_new.set_z(-1)
 		block_new.get_node("tiles").set_frame(type)
+		add_child(block_new)
+		
+func add_item(x,y,type):
+	if type == 1:
+		var block_new = ladder_p.instance()
+		block_new.set_pos(Vector2(x*BLOCK_SIZE,y*BLOCK_SIZE))
+		block_new.set_z(-1)
 		add_child(block_new)
 
 func add_player():
@@ -52,7 +68,10 @@ func add_player():
 
 func _notification(what):
 	if (what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST):
-		var player = get_node("player")
-		var pos = player.get_pos() / Vector2(128,128)
-		db.query("UPDATE player SET pos_x="+str(ceil(pos.x))+" , pos_y="+str(ceil(pos.y)))
+		save_player_pos()
 		get_tree().quit()
+
+func save_player_pos():
+	var player = get_node("player")
+	var pos = player.get_pos() / Vector2(128,128)
+	db.query("UPDATE player SET pos_x="+str(ceil(pos.x))+" , pos_y="+str(ceil(pos.y)))

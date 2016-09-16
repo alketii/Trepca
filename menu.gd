@@ -21,7 +21,7 @@ func _on_generate_pressed():
 	var type = 0
 	db.query(str("DROP TABLE IF EXISTS tiles;"))
 	db.query(str("DROP TABLE IF EXISTS player;"))
-	db.query(str("CREATE TABLE IF NOT EXISTS tiles (pos_x INTEGER, pos_y INTEGER, tile_type INTEGER);"))
+	db.query(str("CREATE TABLE IF NOT EXISTS tiles (pos_x INTEGER, pos_y INTEGER, tile_type INTEGER, item_type INTEGER DEFAULT 0);"))
 	for y in range(100):
 		for x in range(100):
 			x = x - 50

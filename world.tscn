@@ -1,10 +1,30 @@
-[gd_scene load_steps=2 format=1]
+[gd_scene load_steps=3 format=1]
 
 [ext_resource path="res://world.gd" type="Script" id=1]
+[ext_resource path="res://bg/bg.jpg" type="Texture" id=2]
 
 [node name="world" type="Node2D"]
 
 transform/pos = Vector2( 64, 64 )
 script/script = ExtResource( 1 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+layer = -1
+offset = Vector2( 768, 320 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+scroll/offset = Vector2( 0, 0 )
+scroll/base_offset = Vector2( 0, 0 )
+scroll/base_scale = Vector2( 1, 1 )
+scroll/limit_begin = Vector2( 0, 0 )
+scroll/limit_end = Vector2( 0, 0 )
+scroll/ignore_camera_zoom = true
+
+[node name="bg" type="Sprite" parent="ParallaxBackground"]
+
+transform/pos = Vector2( -128, 64 )
+z/z = -999
+texture = ExtResource( 2 )
 
 

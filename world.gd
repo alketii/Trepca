@@ -29,7 +29,10 @@ func generate_parts(direction,pos):
 			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
 
 func generate_world():
-	for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > -10 AND pos_x < 10 AND pos_y > -10 and pos_y < 10"):
+	var player = get_node("player")
+	var pos = db.fetch_array("SELECT * FROM player LIMIT 1;")
+	pos = pos[0]
+	for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(int(pos["pos_x"])-6)+" AND pos_x < "+str(int(pos["pos_x"])+6)+" AND pos_y > "+str(int(pos["pos_y"])-3)+" and pos_y < "+str(int(pos["pos_y"])+3)):
 		add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
 	add_player()
 			
@@ -40,7 +43,7 @@ func add_block(x,y,type):
 		block_new.set_z(-1)
 		block_new.get_node("tiles").set_frame(type)
 		add_child(block_new)
-		
+
 func add_player():
 	var player = player_p.instance()
 	var pos = db.fetch_array("SELECT * FROM player LIMIT 1;")

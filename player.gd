@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-var moving = true
+var moving = false
 
 onready var root = get_node("/root/world")
 
@@ -35,13 +35,17 @@ func _fixed_process(delta):
 			if Input.is_action_pressed("move_down"):
 				tool_direction(global.DOWN)
 			if Input.is_action_pressed("use_tool"):
+				var pos = get_pos()/Vector2(128,128)
 				if tool_direction == global.DOWN:
+					root.db.query("UPDATE tiles SET tile_type=-1 WHERE pos_x="+str(pos.x)+" AND pos_y="+str(pos.y+1))
 					get_node("check_down").get_collider().queue_free()
 				elif tool_direction == global.RIGHT:
 					if get_node("check_right").is_colliding():
+						root.db.query("UPDATE tiles SET tile_type=-1 WHERE pos_x="+str(pos.x+1)+" AND pos_y="+str(pos.y))
 						get_node("check_right").get_collider().queue_free()
 				elif tool_direction == global.LEFT:
 					if get_node("check_left").is_colliding():
+						root.db.query("UPDATE tiles SET tile_type=-1 WHERE pos_x="+str(pos.x-1)+" AND pos_y="+str(pos.y))
 						get_node("check_left").get_collider().queue_free()
 				moving = true
 		else:

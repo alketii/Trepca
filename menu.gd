@@ -19,12 +19,9 @@ func _on_generate_pressed():
 	var chances = []
 	var rand = 0
 	var type = 0
-	db.prepare(str("DROP TABLE IF EXISTS tiles;"))
-	db.step()
-	db.finalize()
-	db.prepare(str("CREATE TABLE IF NOT EXISTS tiles (pos_x INTEGER, pos_y INTEGER, tile_type INTEGER);"))
-	db.step()
-	db.finalize()
+	db.query(str("DROP TABLE IF EXISTS tiles;"))
+	db.query(str("DROP TABLE IF EXISTS player;"))
+	db.query(str("CREATE TABLE IF NOT EXISTS tiles (pos_x INTEGER, pos_y INTEGER, tile_type INTEGER);"))
 	for y in range(100):
 		for x in range(100):
 			x = x - 50
@@ -41,8 +38,8 @@ func _on_generate_pressed():
 					type = global.STONE
 				else:
 					type = global.DIRT
-			db.prepare(str("INSERT INTO tiles (pos_x, pos_y, tile_type) VALUES('"+str(x)+"','"+str(y)+"','"+str(type)+"');"))
-			db.step()
-	db.finalize()
+			db.query(str("INSERT INTO tiles (pos_x, pos_y, tile_type) VALUES('"+str(x)+"','"+str(y)+"','"+str(type)+"');"))
+	db.query(str("CREATE TABLE IF NOT EXISTS player (pos_x INTEGER, pos_y INTEGER);"))
+	db.query(str("INSERT INTO player (pos_x, pos_y) VALUES('0','0');"))
 	get_node("generate").set_text("DONE!")
 	get_node("resume").set_disabled(false)

@@ -14,6 +14,7 @@ var type = 0
 
 func _ready():
 	db.open("user://data.sqlite")
+	get_tree().set_auto_accept_quit(false)
 	generate_world()
 	
 func generate_parts(direction,pos):
@@ -42,5 +43,14 @@ func add_block(x,y,type):
 		
 func add_player():
 	var player = player_p.instance()
-	player.set_pos(Vector2(0,0))
+	var pos = db.fetch_array("SELECT * FROM player LIMIT 1;")
+	pos = pos[0]
+	player.set_pos(Vector2(int(pos["pos_x"])*BLOCK_SIZE,int(pos["pos_y"])*BLOCK_SIZE-BLOCK_SIZE))
 	add_child(player)
+
+func _notification(what):
+	if (what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST):
+		var player = get_node("player")
+		var pos = player.get_pos() / Vector2(128,128)
+		db.query("UPDATE player SET pos_x="+str(ceil(pos.x))+" , pos_y="+str(ceil(pos.y)))
+		get_tree().quit()

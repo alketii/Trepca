@@ -7,22 +7,24 @@
 custom_solver_bias = 0.0
 extents = Vector2( 64, 64 )
 
-[node name="ladder" type="Sprite" groups=[ "ladder" ]]
+[node name="ladder" type="StaticBody2D" groups=[ "item", "ladder" ]]
 
-texture = ExtResource( 1 )
-
-[node name="Area2D" type="Area2D" parent="."]
-
-input/pickable = true
+input/pickable = false
 shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
-gravity_vec = Vector2( 0, 1 )
-gravity = 98.0
-linear_damp = 0.1
-angular_damp = 1.0
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="Sprite" type="Sprite" parent="." groups=[ "ladder" ]]
+
+texture = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
 shape = SubResource( 1 )
 trigger = false

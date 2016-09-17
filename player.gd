@@ -18,6 +18,8 @@ func _ready():
 	get_node("check_down").add_exception(self)
 	get_node("check_right").add_exception(self)
 	get_node("check_left").add_exception(self)
+	get_node("check_up").add_exception(self)
+	get_node("check_current").add_exception(self)
 	tool_direction(global.RIGHT)
 	set_fixed_process(true)
 	
@@ -35,34 +37,60 @@ func _fixed_process(delta):
 				if not get_node("check_right").is_colliding():
 					root.generate_parts(global.RIGHT,get_pos())
 					prep_move(global.RIGHT)
+				else:
+					if not get_node("check_right").get_collider().is_in_group("block"):
+						root.generate_parts(global.RIGHT,get_pos())
+						prep_move(global.RIGHT)
 			if Input.is_action_pressed("move_left"):
 				tool_direction(global.LEFT)
 				if not get_node("check_left").is_colliding():
 					root.generate_parts(global.LEFT,get_pos())
 					prep_move(global.LEFT)
+				else:
+					if not get_node("check_left").get_collider().is_in_group("block"):
+						root.generate_parts(global.LEFT,get_pos())
+						prep_move(global.LEFT)
 			if Input.is_action_pressed("move_up"):
 				tool_direction(global.UP)
 				if not get_node("check_up").is_colliding():
-					root.generate_parts(global.UP,get_pos())
-					prep_move(global.UP)
+					if get_node("check_current").is_colliding():
+						if get_node("check_current").get_collider().is_in_group("ladder"):
+							root.generate_parts(global.UP,get_pos())
+							prep_move(global.UP)
+				else:
+					if get_node("check_up").is_colliding():
+						if get_node("check_up").get_collider().is_in_group("ladder"):
+							if get_node("check_current").is_colliding():
+								if get_node("check_current").get_collider().is_in_group("ladder"):
+									root.generate_parts(global.UP,get_pos())
+									prep_move(global.UP)
 			if Input.is_action_pressed("move_down"):
 				tool_direction(global.DOWN)
+				if get_node("check_down").is_colliding():
+					if get_node("check_down").get_collider().is_in_group("ladder"):
+						root.generate_parts(global.DOWN,get_pos())
+						prep_move(global.DOWN)
+					
 			if Input.is_action_just_pressed("use_tool"):
 				var opos = get_pos()
 				var pos = opos/Vector2(128,128)
 				if ctool == 0:
 					if tool_direction == global.DOWN:
 						if get_node("check_down").is_colliding():
-							get_node("check_down").get_collider().hit()
+							if get_node("check_down").get_collider().is_in_group("block"):
+								get_node("check_down").get_collider().hit()
 					elif tool_direction == global.UP:
 						if get_node("check_up").is_colliding():
-							get_node("check_up").get_collider().hit()
+							if get_node("check_up").get_collider().is_in_group("block"):
+								get_node("check_up").get_collider().hit()
 					elif tool_direction == global.RIGHT:
 						if get_node("check_right").is_colliding():
-							get_node("check_right").get_collider().hit()
+							if get_node("check_right").get_collider().is_in_group("block"):
+								get_node("check_right").get_collider().hit()
 					elif tool_direction == global.LEFT:
 						if get_node("check_left").is_colliding():
-							get_node("check_left").get_collider().hit()
+							if get_node("check_left").get_collider().is_in_group("block"):
+								get_node("check_left").get_collider().hit()
 				elif ctool == 1:
 					root.db.query("UPDATE tiles SET item_type=1 WHERE pos_x="+str(pos.x-1)+" AND pos_y="+str(pos.y))
 					var ladder = root.ladder_p.instance()
@@ -104,7 +132,7 @@ func _fixed_process(delta):
 				
 	if Input.is_action_just_pressed("F2"):
 		root.save_player_pos()
-		get_tree().reload_current_scene()
+		get_tree().change_scene("res://menu.tscn")
 func prep_move(get_direction):
 	direction = get_direction
 	distance_left = DISTANCE

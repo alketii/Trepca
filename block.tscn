@@ -28,7 +28,7 @@ animations = [ { "frames":[ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 )
 
 animations = [ { "frames":[ ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ) ], "loop":true, "name":"default", "speed":5.0 } ]
 
-[node name="block" type="StaticBody2D"]
+[node name="block" type="StaticBody2D" groups=[ "block" ]]
 
 transform/pos = Vector2( 64, 64 )
 input/pickable = false

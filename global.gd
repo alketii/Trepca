@@ -10,7 +10,5 @@ const GRASS = 0
 const DIRT = 1
 const STONE = 2
 
-onready var root = get_node("/root/world")
-
 func _ready():
 	pass

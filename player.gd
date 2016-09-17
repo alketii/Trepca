@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 var moving = false
 
-onready var root = get_node("/root/world")
+var root
 
 const DISTANCE = 128
 var distance_left = 128
@@ -14,6 +14,7 @@ var tool_direction = global.DOWN
 var ctool = 0
 
 func _ready():
+	root = get_node("/root/world")
 	get_node("check_down").add_exception(self)
 	get_node("check_right").add_exception(self)
 	get_node("check_left").add_exception(self)

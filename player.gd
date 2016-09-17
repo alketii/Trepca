@@ -52,16 +52,17 @@ func _fixed_process(delta):
 				var pos = opos/Vector2(128,128)
 				if ctool == 0:
 					if tool_direction == global.DOWN:
-						root.db.query("UPDATE tiles SET tile_type=-1 WHERE pos_x="+str(pos.x)+" AND pos_y="+str(pos.y+1))
-						get_node("check_down").get_collider().queue_free()
+						if get_node("check_down").is_colliding():
+							get_node("check_down").get_collider().hit()
+					elif tool_direction == global.UP:
+						if get_node("check_up").is_colliding():
+							get_node("check_up").get_collider().hit()
 					elif tool_direction == global.RIGHT:
 						if get_node("check_right").is_colliding():
-							root.db.query("UPDATE tiles SET tile_type=-1 WHERE pos_x="+str(pos.x+1)+" AND pos_y="+str(pos.y))
-							get_node("check_right").get_collider().queue_free()
+							get_node("check_right").get_collider().hit()
 					elif tool_direction == global.LEFT:
 						if get_node("check_left").is_colliding():
-							root.db.query("UPDATE tiles SET tile_type=-1 WHERE pos_x="+str(pos.x-1)+" AND pos_y="+str(pos.y))
-							get_node("check_left").get_collider().queue_free()
+							get_node("check_left").get_collider().hit()
 				elif ctool == 1:
 					root.db.query("UPDATE tiles SET item_type=1 WHERE pos_x="+str(pos.x-1)+" AND pos_y="+str(pos.y))
 					var ladder = root.ladder_p.instance()

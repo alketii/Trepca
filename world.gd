@@ -14,50 +14,52 @@ var level = 0
 var type = 0
 
 func _ready():
-	db.open("user://data.sqlite")
+	db.open("res://worlds/data.sqlite")
 	get_tree().set_auto_accept_quit(false)
 	generate_world()
 	
 func generate_parts(direction,pos):
 	if direction == global.RIGHT:
 		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x = "+str(pos.x/BLOCK_SIZE+7)+" AND pos_y > "+str(pos.y/BLOCK_SIZE-5)+" and pos_y < "+str(pos.y/BLOCK_SIZE+5)):
-			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
-			add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
+			add_tile(tile)
 	elif direction == global.LEFT:
 		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x = "+str(pos.x/BLOCK_SIZE-7)+" AND pos_y > "+str(pos.y/BLOCK_SIZE-5)+" and pos_y < "+str(pos.y/BLOCK_SIZE+5)):
-			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
-			add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
+			add_tile(tile)
 	elif direction == global.UP:
 		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(pos.x/BLOCK_SIZE-7)+" AND pos_x < "+str(pos.x/BLOCK_SIZE+7)+" and pos_y = "+str(pos.y/BLOCK_SIZE-5)):
-			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
-			add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
+			add_tile(tile)
 	elif direction == global.DOWN:
 		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(pos.x/BLOCK_SIZE-7)+" AND pos_x < "+str(pos.x/BLOCK_SIZE+7)+" and pos_y = "+str(pos.y/BLOCK_SIZE+5)):
-			add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
-			add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
+			add_tile(tile)
 
 func generate_world():
 	var pos = db.fetch_array("SELECT * FROM player LIMIT 1;")
 	pos = pos[0]
 	for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x > "+str(int(pos["pos_x"])-7)+" AND pos_x < "+str(int(pos["pos_x"])+7)+" AND pos_y > "+str(int(pos["pos_y"])-6)+" and pos_y < "+str(int(pos["pos_y"])+6)):
-		add_block(tile["pos_x"],tile["pos_y"],tile["tile_type"])
-		add_item(tile["pos_x"],tile["pos_y"],tile["item_type"])
+		add_tile(tile)
 	add_player()
 			
-func add_block(x,y,type):
+func add_tile(tile):
+	var type = tile["tile_type"]
+	var item = tile["item_type"]
+	var x = tile["pos_x"]
+	var y = tile["pos_y"]
+	#var breaked = tile["breaked"]
 	if type != global.EMPTY:
 		var block_new = block.instance()
 		block_new.set_pos(Vector2(x*BLOCK_SIZE,y*BLOCK_SIZE))
 		block_new.set_z(-1)
 		block_new.get_node("tiles").set_frame(type)
+		block_new.x = x
+		block_new.y = y
+		#block_new.breaked = breaked
 		add_child(block_new)
-		
-func add_item(x,y,type):
-	if type == 1:
-		var block_new = ladder_p.instance()
-		block_new.set_pos(Vector2(x*BLOCK_SIZE,y*BLOCK_SIZE))
-		block_new.set_z(-1)
-		add_child(block_new)
+	if item != 0:
+		if item == 1:
+			var block_new = ladder_p.instance()
+			block_new.set_pos(Vector2((x+1)*BLOCK_SIZE,y*BLOCK_SIZE))
+			block_new.set_z(-1)
+			add_child(block_new)
 
 func add_player():
 	var player = player_p.instance()

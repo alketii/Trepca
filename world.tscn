@@ -50,9 +50,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 8.0
-margin/top = 672.0
+margin/top = 661.0
 margin/right = 168.0
-margin/bottom = 742.0
+margin/bottom = 731.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -69,9 +69,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 174.0
-margin/top = 672.0
+margin/top = 661.0
 margin/right = 334.0
-margin/bottom = 742.0
+margin/bottom = 731.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -88,9 +88,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 1099.0
-margin/top = 672.0
+margin/top = 661.0
 margin/right = 1273.0
-margin/bottom = 742.0
+margin/bottom = 731.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -124,9 +124,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 7.0
-margin/top = 745.0
+margin/top = 734.0
 margin/right = 170.0
-margin/bottom = 761.0
+margin/bottom = 750.0
 range/min = 0.0
 range/max = 100.0
 range/step = 1.0
@@ -180,6 +180,23 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
+[node name="count_ladders" type="Label" parent="hud"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 175.0
+margin/top = 732.0
+margin/right = 334.0
+margin/bottom = 769.0
+custom_fonts/font = ExtResource( 7 )
+text = "0"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
 [node name="shop" type="Button" parent="hud"]
 
 visibility/visible = false
@@ -190,14 +207,44 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 917.0
-margin/top = 671.0
+margin/top = 660.0
 margin/right = 1091.0
-margin/bottom = 741.0
+margin/bottom = 730.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 text = "Shop"
 icon = ExtResource( 8 )
+flat = false
+
+[node name="shop_items" type="Panel" parent="hud"]
+
+visibility/visible = false
+visibility/opacity = 0.9
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 216.0
+margin/top = 67.0
+margin/right = 1079.0
+margin/bottom = 597.0
+
+[node name="buy_ladder" type="Button" parent="hud/shop_items"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 16.0
+margin/top = 12.0
+margin/right = 238.0
+margin/bottom = 82.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Ladder - 1C"
+icon = ExtResource( 4 )
 flat = false
 
 [node name="bazaar" parent="." instance=ExtResource( 9 )]
@@ -209,5 +256,9 @@ transform/pos = Vector2( -256, 384 )
 [connection signal="pressed" from="hud/tool_2_ladder" to="." method="_on_tool_2_ladder_pressed"]
 
 [connection signal="pressed" from="hud/teleport" to="." method="_on_teleport_pressed"]
+
+[connection signal="pressed" from="hud/shop" to="." method="_on_shop_pressed"]
+
+[connection signal="pressed" from="hud/shop_items/buy_ladder" to="." method="_on_buy_ladder_pressed"]
 
 

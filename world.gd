@@ -98,3 +98,15 @@ func _on_teleport_pressed():
 	player.bag_value = 0
 	save_player_pos()
 	get_tree().reload_current_scene()
+
+
+func _on_shop_pressed():
+	get_node("hud/shop_items").show()
+
+
+func _on_buy_ladder_pressed():
+	if player.coins > 0:
+		player.coins -=1
+		player.ladders += 1
+		player.update_coins()
+		player.update_ladders()

@@ -20,7 +20,9 @@ var pick
 var bag_items = 0
 var bag_max_items = 10
 var bag_value = 0
-var coins = 0
+
+var coins = 10
+var ladders = 10
 
 func _ready():
 	root = get_node("/root/world")
@@ -32,6 +34,7 @@ func _ready():
 	get_node("check_current").add_exception(self)
 	tool_direction(global.RIGHT)
 	update_stamina()
+	update_ladders()
 	set_fixed_process(true)
 	
 func _fixed_process(delta):
@@ -106,11 +109,14 @@ func _fixed_process(delta):
 								if get_node("check_left").get_collider().is_in_group("block"):
 									get_node("check_left").get_collider().hit()
 				if ctool == 1:
-					root.db.query("UPDATE tiles SET item_type=1 WHERE pos_x="+str(pos.x-1)+" AND pos_y="+str(pos.y))
-					var ladder = root.ladder_p.instance()
-					ladder.set_pos(opos)
-					ladder.set_z(-1)
-					root.add_child(ladder)
+					if ladders > 0:
+						root.db.query("UPDATE tiles SET item_type=1 WHERE pos_x="+str(pos.x-1)+" AND pos_y="+str(pos.y))
+						var ladder = root.ladder_p.instance()
+						ladder.set_pos(opos)
+						ladder.set_z(-1)
+						root.add_child(ladder)
+						ladders -= 1
+						update_ladders()
 				moving = true
 		else:
 				root.generate_parts(global.DOWN,get_pos())
@@ -157,6 +163,7 @@ func _fixed_process(delta):
 				root.get_node("hud/shop").show()
 		else:
 			root.get_node("hud/shop").hide()
+			root.get_node("hud/shop_items").hide()
 				
 	if Input.is_action_just_pressed("F2"):
 		root.save_player_pos()
@@ -195,6 +202,9 @@ func update_bag():
 
 func update_coins():
 	root.get_node("hud/coin_label").set_text(str(coins))
+	
+func update_ladders():
+	root.get_node("hud/count_ladders").set_text(str(ladders))
 	
 func bag_add(value):
 	bag_items += 1

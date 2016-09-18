@@ -20,6 +20,7 @@ func _ready():
 	generate_world()
 	
 func generate_parts(direction,pos):
+	player.stamina_down(1)
 	if direction == global.RIGHT:
 		for tile in db.fetch_array("SELECT * FROM tiles WHERE pos_x = "+str(pos.x/BLOCK_SIZE+7)+" AND pos_y > "+str(pos.y/BLOCK_SIZE-5)+" and pos_y < "+str(pos.y/BLOCK_SIZE+5)):
 			add_tile(tile)
@@ -78,6 +79,8 @@ func _notification(what):
 func save_player_pos():
 	var pos = player.get_pos() / Vector2(128,128)
 	db.query("UPDATE player SET pos_x="+str(ceil(pos.x))+" , pos_y="+str(ceil(pos.y)))
+	
+	
 
 func _on_tool_1_pick_pressed():
 	get_node("hud/tool_1_pick").set_focus_mode(0)
@@ -92,5 +95,6 @@ func _on_tool_2_ladder_pressed():
 
 func _on_teleport_pressed():
 	player.set_pos(Vector2(-256,384))
+	player.bag_value = 0
 	save_player_pos()
 	get_tree().reload_current_scene()

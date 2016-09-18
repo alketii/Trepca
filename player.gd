@@ -15,9 +15,16 @@ var ctool = 0
 
 var stamina_max = 500
 var stamina = 500
+var pick
+
+var bag_items = 0
+var bag_max_items = 10
+var bag_value = 0
+var coins = 0
 
 func _ready():
 	root = get_node("/root/world")
+	pick = root.get_node("hud/pick_pb")
 	get_node("check_down").add_exception(self)
 	get_node("check_right").add_exception(self)
 	get_node("check_left").add_exception(self)
@@ -79,24 +86,26 @@ func _fixed_process(delta):
 				stamina_down(2)
 				var opos = get_pos()
 				var pos = opos/Vector2(128,128)
-				if ctool == 0:
-					if tool_direction == global.DOWN:
-						if get_node("check_down").is_colliding():
-							if get_node("check_down").get_collider().is_in_group("block"):
-								get_node("check_down").get_collider().hit()
-					elif tool_direction == global.UP:
-						if get_node("check_up").is_colliding():
-							if get_node("check_up").get_collider().is_in_group("block"):
-								get_node("check_up").get_collider().hit()
-					elif tool_direction == global.RIGHT:
-						if get_node("check_right").is_colliding():
-							if get_node("check_right").get_collider().is_in_group("block"):
-								get_node("check_right").get_collider().hit()
-					elif tool_direction == global.LEFT:
-						if get_node("check_left").is_colliding():
-							if get_node("check_left").get_collider().is_in_group("block"):
-								get_node("check_left").get_collider().hit()
-				elif ctool == 1:
+				if pick.get_value() > 0:
+					pick.set_value(pick.get_value()-1)
+					if ctool == 0:
+						if tool_direction == global.DOWN:
+							if get_node("check_down").is_colliding():
+								if get_node("check_down").get_collider().is_in_group("block"):
+									get_node("check_down").get_collider().hit()
+						elif tool_direction == global.UP:
+							if get_node("check_up").is_colliding():
+								if get_node("check_up").get_collider().is_in_group("block"):
+									get_node("check_up").get_collider().hit()
+						elif tool_direction == global.RIGHT:
+							if get_node("check_right").is_colliding():
+								if get_node("check_right").get_collider().is_in_group("block"):
+									get_node("check_right").get_collider().hit()
+						elif tool_direction == global.LEFT:
+							if get_node("check_left").is_colliding():
+								if get_node("check_left").get_collider().is_in_group("block"):
+									get_node("check_left").get_collider().hit()
+				if ctool == 1:
 					root.db.query("UPDATE tiles SET item_type=1 WHERE pos_x="+str(pos.x-1)+" AND pos_y="+str(pos.y))
 					var ladder = root.ladder_p.instance()
 					ladder.set_pos(opos)
@@ -116,6 +125,7 @@ func _fixed_process(delta):
 					moving = false
 				else:
 					distance_left = DISTANCE
+					root.generate_parts(global.DOWN,get_pos())
 		elif direction == global.RIGHT:
 			if distance_left != 0:
 				move(Vector2(STEP,0))
@@ -136,15 +146,23 @@ func _fixed_process(delta):
 				moving = false
 				
 	if get_node("check_current").is_colliding():
-		if get_node("check_current").get_collider().get_name() == "bazaar":
-			stamina = stamina_max
+		if get_pos() == Vector2(-256,384):
+			if get_node("check_current").get_collider().get_name() == "bazaar":
+				stamina = stamina_max
+				coins += bag_value
+				bag_value = 0
+				bag_items = 0
+				update_bag()
+				update_coins()
+				root.get_node("hud/shop").show()
+		else:
+			root.get_node("hud/shop").hide()
 				
 	if Input.is_action_just_pressed("F2"):
 		root.save_player_pos()
 		get_tree().change_scene("res://menu.tscn")
 		
 func prep_move(get_direction):
-	stamina_down(1)
 	direction = get_direction
 	distance_left = DISTANCE
 	moving = true
@@ -170,7 +188,18 @@ func tool_direction(direction):
 		tool_direction = global.DOWN
 		
 func update_stamina():
-	root.get_node("/root/world/hud/stamina").set_text(str(stamina)+"/"+str(stamina_max))
+	root.get_node("hud/stamina_pb").set_value(stamina)
+	
+func update_bag():
+	root.get_node("hud/bag_label").set_text(str(bag_items)+"/"+str(bag_max_items))
+
+func update_coins():
+	root.get_node("hud/coin_label").set_text(str(coins))
+	
+func bag_add(value):
+	bag_items += 1
+	bag_value += value
+	update_bag()
 	
 func stamina_down(amount):
 	stamina -= amount

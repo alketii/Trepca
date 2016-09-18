@@ -80,9 +80,11 @@ func save_player_pos():
 	db.query("UPDATE player SET pos_x="+str(ceil(pos.x))+" , pos_y="+str(ceil(pos.y)))
 
 func _on_tool_1_pick_pressed():
+	get_node("hud/tool_1_pick").set_focus_mode(0)
 	player.ctool = 0
 	player.get_node("tools").set_frame(player.ctool)
 
 func _on_tool_2_ladder_pressed():
+	get_node("hud/tool_2_ladder").set_focus_mode(0)
 	player.ctool = 1
 	player.get_node("tools").set_frame(player.ctool)

@@ -16,6 +16,7 @@ func _ready():
 			get_node("breaks").show()
 	
 func hit():
+	get_node("/root/world/player").stamina_down(2)
 	if breakable:
 		breaked += 1
 		if breaked >= breaked_max:

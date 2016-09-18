@@ -7,11 +7,14 @@ var root
 const DISTANCE = 128
 var distance_left = 128
 const STEP = 4
-const FALL = 8
+const FALL = 4
 
 var direction = global.DOWN
 var tool_direction = global.DOWN
 var ctool = 0
+
+var stamina = 100
+var stamina_max = 100
 
 func _ready():
 	root = get_node("/root/world")
@@ -21,6 +24,7 @@ func _ready():
 	get_node("check_up").add_exception(self)
 	get_node("check_current").add_exception(self)
 	tool_direction(global.RIGHT)
+	update_stamina()
 	set_fixed_process(true)
 	
 func _fixed_process(delta):
@@ -32,7 +36,7 @@ func _fixed_process(delta):
 		get_node("tools").set_frame(ctool)
 	if not moving:
 		if get_node("check_down").is_colliding():
-			if Input.is_action_pressed("move_right"):
+			if Input.is_action_pressed("move_right") and stamina > 0:
 				tool_direction(global.RIGHT)
 				if not get_node("check_right").is_colliding():
 					root.generate_parts(global.RIGHT,get_pos())
@@ -41,7 +45,7 @@ func _fixed_process(delta):
 					if not get_node("check_right").get_collider().is_in_group("block"):
 						root.generate_parts(global.RIGHT,get_pos())
 						prep_move(global.RIGHT)
-			if Input.is_action_pressed("move_left"):
+			if Input.is_action_pressed("move_left") and stamina > 0:
 				tool_direction(global.LEFT)
 				if not get_node("check_left").is_colliding():
 					root.generate_parts(global.LEFT,get_pos())
@@ -50,7 +54,7 @@ func _fixed_process(delta):
 					if not get_node("check_left").get_collider().is_in_group("block"):
 						root.generate_parts(global.LEFT,get_pos())
 						prep_move(global.LEFT)
-			if Input.is_action_pressed("move_up"):
+			if Input.is_action_pressed("move_up") and stamina > 0:
 				tool_direction(global.UP)
 				if not get_node("check_up").is_colliding():
 					if get_node("check_current").is_colliding():
@@ -64,14 +68,15 @@ func _fixed_process(delta):
 								if get_node("check_current").get_collider().is_in_group("ladder"):
 									root.generate_parts(global.UP,get_pos())
 									prep_move(global.UP)
-			if Input.is_action_pressed("move_down"):
+			if Input.is_action_pressed("move_down") and stamina > 0:
 				tool_direction(global.DOWN)
 				if get_node("check_down").is_colliding():
 					if get_node("check_down").get_collider().is_in_group("ladder"):
 						root.generate_parts(global.DOWN,get_pos())
 						prep_move(global.DOWN)
 					
-			if Input.is_action_just_pressed("use_tool"):
+			if Input.is_action_just_pressed("use_tool") and stamina > 1:
+				stamina_down(2)
 				var opos = get_pos()
 				var pos = opos/Vector2(128,128)
 				if ctool == 0:
@@ -130,10 +135,16 @@ func _fixed_process(delta):
 			else:
 				moving = false
 				
+	if get_node("check_current").is_colliding():
+		if get_node("check_current").get_collider().get_name() == "bazaar":
+			stamina = 100
+				
 	if Input.is_action_just_pressed("F2"):
 		root.save_player_pos()
 		get_tree().change_scene("res://menu.tscn")
+		
 func prep_move(get_direction):
+	stamina_down(1)
 	direction = get_direction
 	distance_left = DISTANCE
 	moving = true
@@ -157,3 +168,10 @@ func tool_direction(direction):
 		get_node("tools").set_pos(Vector2(0,64))
 		get_node("tools").set_rotd(180)
 		tool_direction = global.DOWN
+		
+func update_stamina():
+	root.get_node("/root/world/hud/stamina").set_text(str(stamina)+"/"+str(stamina_max))
+	
+func stamina_down(amount):
+	stamina -= amount
+	update_stamina()

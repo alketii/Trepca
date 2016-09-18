@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=7 format=1]
 
 [ext_resource path="res://world.gd" type="Script" id=1]
 [ext_resource path="res://bg/bg.jpg" type="Texture" id=2]
 [ext_resource path="res://tools/pick.png" type="Texture" id=3]
 [ext_resource path="res://tools/ladder.png" type="Texture" id=4]
+[ext_resource path="res://fonts/erares_63.fnt" type="BitmapFont" id=5]
+[ext_resource path="res://misc/bazaar.tscn" type="PackedScene" id=6]
 
 [node name="world" type="Node2D"]
 
@@ -73,6 +75,26 @@ shortcut = null
 text = "2. Ladder"
 icon = ExtResource( 4 )
 flat = false
+
+[node name="stamina" type="Label" parent="hud"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 6.0
+margin/top = 4.0
+margin/right = 59.0
+margin/bottom = 18.0
+custom_fonts/font = ExtResource( 5 )
+text = "100/100"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="bazaar" parent="." instance=ExtResource( 6 )]
+
+transform/pos = Vector2( -256, 384 )
 
 [connection signal="pressed" from="hud/tool_1_pick" to="." method="_on_tool_1_pick_pressed"]
 

@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=1]
+[gd_scene load_steps=5 format=1]
 
 [ext_resource path="res://world.gd" type="Script" id=1]
 [ext_resource path="res://bg/bg.jpg" type="Texture" id=2]
+[ext_resource path="res://tools/pick.png" type="Texture" id=3]
+[ext_resource path="res://tools/ladder.png" type="Texture" id=4]
 
 [node name="world" type="Node2D"]
 
@@ -26,5 +28,54 @@ scroll/ignore_camera_zoom = true
 transform/pos = Vector2( -128, 64 )
 z/z = -999
 texture = ExtResource( 2 )
+
+[node name="hud" type="CanvasLayer" parent="."]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="tool_1_pick" type="Button" parent="hud"]
+
+visibility/opacity = 0.9
+visibility/self_opacity = 0.8
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 8.0
+margin/top = 689.0
+margin/right = 168.0
+margin/bottom = 759.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "1. Pick"
+icon = ExtResource( 3 )
+flat = false
+
+[node name="tool_2_ladder" type="Button" parent="hud"]
+
+visibility/opacity = 0.9
+visibility/self_opacity = 0.8
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 174.0
+margin/top = 689.0
+margin/right = 334.0
+margin/bottom = 759.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "2. Ladder"
+icon = ExtResource( 4 )
+flat = false
+
+[connection signal="pressed" from="hud/tool_1_pick" to="." method="_on_tool_1_pick_pressed"]
+
+[connection signal="pressed" from="hud/tool_2_ladder" to="." method="_on_tool_2_ladder_pressed"]
 
 

@@ -5,6 +5,7 @@ var player_p = preload("res://player.tscn")
 var ladder_p = preload("res://items/ladder/ladder.tscn")
 
 onready var db = SQLite.new()
+var player
 
 const BLOCK_SIZE = 128
 
@@ -62,11 +63,12 @@ func add_tile(tile):
 			add_child(block_new)
 
 func add_player():
-	var player = player_p.instance()
+	var playeri = player_p.instance()
 	var pos = db.fetch_array("SELECT * FROM player LIMIT 1;")
 	pos = pos[0]
-	player.set_pos(Vector2(int(pos["pos_x"])*BLOCK_SIZE,int(pos["pos_y"])*BLOCK_SIZE-BLOCK_SIZE))
-	add_child(player)
+	playeri.set_pos(Vector2(int(pos["pos_x"])*BLOCK_SIZE,int(pos["pos_y"])*BLOCK_SIZE-BLOCK_SIZE))
+	player = playeri
+	add_child(playeri)
 
 func _notification(what):
 	if (what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST):
@@ -74,6 +76,13 @@ func _notification(what):
 		get_tree().quit()
 
 func save_player_pos():
-	var player = get_node("player")
 	var pos = player.get_pos() / Vector2(128,128)
 	db.query("UPDATE player SET pos_x="+str(ceil(pos.x))+" , pos_y="+str(ceil(pos.y)))
+
+func _on_tool_1_pick_pressed():
+	player.ctool = 0
+	player.get_node("tools").set_frame(player.ctool)
+
+func _on_tool_2_ladder_pressed():
+	player.ctool = 1
+	player.get_node("tools").set_frame(player.ctool)

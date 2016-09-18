@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=1]
+
+[ext_resource path="res://Tiles/dirt_far.png" type="Texture" id=1]
+
+[node name="dirt_far" type="Sprite"]
+
+texture = ExtResource( 1 )
+
+

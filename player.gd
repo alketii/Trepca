@@ -13,8 +13,8 @@ var direction = global.DOWN
 var tool_direction = global.DOWN
 var ctool = 0
 
-var stamina = 100
-var stamina_max = 100
+var stamina_max = 500
+var stamina = 500
 
 func _ready():
 	root = get_node("/root/world")
@@ -137,7 +137,7 @@ func _fixed_process(delta):
 				
 	if get_node("check_current").is_colliding():
 		if get_node("check_current").get_collider().get_name() == "bazaar":
-			stamina = 100
+			stamina = stamina_max
 				
 	if Input.is_action_just_pressed("F2"):
 		root.save_player_pos()

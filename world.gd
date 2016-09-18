@@ -88,3 +88,9 @@ func _on_tool_2_ladder_pressed():
 	get_node("hud/tool_2_ladder").set_focus_mode(0)
 	player.ctool = 1
 	player.get_node("tools").set_frame(player.ctool)
+
+
+func _on_teleport_pressed():
+	player.set_pos(Vector2(-256,384))
+	save_player_pos()
+	get_tree().reload_current_scene()

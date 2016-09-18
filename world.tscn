@@ -76,6 +76,24 @@ text = "2. Ladder"
 icon = ExtResource( 4 )
 flat = false
 
+[node name="teleport" type="Button" parent="hud"]
+
+visibility/opacity = 0.9
+visibility/self_opacity = 0.8
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 1111.0
+margin/top = 689.0
+margin/right = 1271.0
+margin/bottom = 759.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Teleport Home"
+flat = false
+
 [node name="stamina" type="Label" parent="hud"]
 
 focus/ignore_mouse = true
@@ -84,8 +102,8 @@ size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 6.0
 margin/top = 4.0
-margin/right = 59.0
-margin/bottom = 18.0
+margin/right = 135.0
+margin/bottom = 41.0
 custom_fonts/font = ExtResource( 5 )
 text = "100/100"
 percent_visible = 1.0
@@ -99,5 +117,7 @@ transform/pos = Vector2( -256, 384 )
 [connection signal="pressed" from="hud/tool_1_pick" to="." method="_on_tool_1_pick_pressed"]
 
 [connection signal="pressed" from="hud/tool_2_ladder" to="." method="_on_tool_2_ladder_pressed"]
+
+[connection signal="pressed" from="hud/teleport" to="." method="_on_teleport_pressed"]
 
 

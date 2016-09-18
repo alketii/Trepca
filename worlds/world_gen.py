@@ -35,8 +35,24 @@ for y in range(height):
 		elif y > 50 and y <= 100:
 			chances = [1,1,1,1,2,2,2,3,3,3,4,4]
 			ttype = chances[random.randint(0,len(chances))-1]
+		elif y > 100 and y <= 150:
+			chances = [1,1,1,1,2,2,2,3,3,3,4,4,4,5,5]
+			ttype = chances[random.randint(0,len(chances))-1]
+		elif y > 200 and y <= 250:
+			chances = [1,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,5,6,6]
+			ttype = chances[random.randint(0,len(chances))-1]
+		elif y > 300 and y <= 350:
+			chances = [1,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7]
+			ttype = chances[random.randint(0,len(chances))-1]
+		elif y > 400 and y <= 450:
+			chances = [1,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7,7,8,8]
+			ttype = chances[random.randint(0,len(chances))-1]
+		elif y > 500 and y <= 550:
+			chances = [1,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7,7,8,8,8,9,9]
+			ttype = chances[random.randint(0,len(chances))-1]
 		else:
-			ttype = 2
+			chances = [1,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,10,10]
+			ttype = chances[random.randint(0,len(chances))-1]
 			
 				
 		tiles.append((x,y,ttype))
